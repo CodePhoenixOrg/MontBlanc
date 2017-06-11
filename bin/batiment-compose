@@ -1,0 +1,27 @@
+#!/bin/bash
+cd /Users/david/Sites/CodePhoenix.net/SDK/php/SoL/docker/batiment
+
+COMMAND=$1
+
+if [ -z "$COMMAND" ];
+then
+	echo "Missing argument 'start/stop/restart'"
+	exit 1
+fi
+
+#sudo service -N docker start
+
+if [ "$COMMAND" = "--start" ];
+then
+	docker-compose up
+	exit 0
+fi
+
+if [ "$COMMAND" = "--stop" ];
+then
+	docker-compose down
+	exit 0
+fi
+
+echo "Unknown command, nothing was done."
+exit 1

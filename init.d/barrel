@@ -1,0 +1,49 @@
+#!/sbin/openrc-run
+  
+  name=$RC_SVCNAME
+  command="/usr/local/bin/batiment"
+  command_args=""
+  command_user="root"
+  pidfile="/run/$RC_SVCNAME/$RC_SVCNAME.pid"
+  start_stop_daemon_args=""
+  command_background="yes"
+
+  depend() {
+          need docker
+  }
+
+  start_pre() {
+         checkpath --directory --owner $command_user:$command_user --mode 0775 \
+                 /run/$RC_SVCNAME /var/log/$RC_SVCNAME
+  }
+
+  start() {
+      ebegin "Starting barrel"
+      service --ifnotstarted docker start
+      sleep 2s
+      batiment --start
+#      start-stop-daemon --start \
+#          --exec /usr/local/bin/batiment \
+#          --pidfile /var/run/barrel.pid \
+#          -- \
+ #         --start
+      eend $?
+  }
+
+  stop() {
+      ebegin "Sopping barrel"
+      batiment --stop
+#      start-stop-daemon --stop \
+#          --exec /usr/local/bin/batiment \
+#          --pidfile /var/run/barrel.pid \
+#          -- \
+#          --stop
+      eend $?
+  }
+
+  restart() {
+      ebegin "Restarting barrel"
+  	stop()
+	start()
+      eend $?
+  }
